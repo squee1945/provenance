@@ -17,10 +17,22 @@ jobs:
 
     steps:
 
-      - uses: actions/setup-go@v5
+    - uses: actions/setup-go@v5
 
-      - uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
-      - uses: ko-build/setup-ko@v0.7
+    - uses: ko-build/setup-ko@v0.7
 
-      - run: ko build ./cmd
+    - run: ko build -t my-image ./cmd
+
+    - name: Get image digest
+      run: |
+        image_digest=$(docker inspect -f '{{ .Digest }}' my-image | tr -d '"')
+        echo "Image digest: $image_digest"
+        echo "::set-env name=IMAGE_DIGEST::${image_digest}"
+
+    - uses: actions/attest-build-provenance@v1
+      with:
+        subject-name: ${{ env.KO_DOCKER_REPO }}
+        subject-digest: ${{ env.IMAGE_DIGEST }}
+        push-to-registry: true
