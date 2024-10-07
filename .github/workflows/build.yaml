@@ -24,8 +24,9 @@ jobs:
     - uses: ko-build/setup-ko@v0.7
 
     - run: |
-        digest=$(ko build ./cmd | cut -d\@ -f2)
-        echo "Digest: ${digest}"
+        image_digest=$(ko build ./cmd | cut -d\@ -f2)
+        echo "Image digest: ${image_digest}"
+        echo "IMAGE_DIGEST=${image_digest}" >> $GITHUB_ENV
 
     # - name: Get image digest
     #   run: |
