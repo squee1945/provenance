@@ -1,3 +1,3 @@
 module github.com/squee1945/provenance
 
-go 1.23.2
+go 1.23
